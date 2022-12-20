@@ -10,10 +10,10 @@ void delay(){
     }
 }
 
-void admin(){
+void admin(){ //admin string operations
         system("cls");
         printf("\t\t\t\tBank Management System (ADMIN) \n");
-        printf("\t\t\t---------------------------------------\n\n\n");
+        printf("\t\t\t------------------------------------------\n\n\n");
         printf("Login........");
         delay(); // delay for 3 second
         printf("Admin Login....");
@@ -33,7 +33,7 @@ void admin(){
         printf("\n7.SORT ACCOUNT BY NAME");
         printf("\n8.DELETE ACCOUNT");
         printf("\n0.EXIT");
-        printf("\n\n\nEnter 0-2 to operate the sy0stem.\n\n");
+        printf("\n\n\nEnter 0-2 to operate the system.\n\n");
         printf("Input: ");
 
 
@@ -62,7 +62,7 @@ int passwordLoginAccess(char str[]){ //password matching code only for admin log
         return 0;
 }
 
-void adminLogin(){
+void adminLogin(){ //check admin password
 
         int access;
         char password[ADMIN_PASS_SIZE];
@@ -82,9 +82,11 @@ void adminLogin(){
             int key;
             printf("\t\t\t\tBank Management System (Admin panel)\n");
             printf("\t\t\t-------------------------------------------------\n\n\n\n");
-            printf("\nWrongPassWord\n");
-            printf("\nPress 1 to reset password\n");
-            printf("\nPress 2 to retry");
+            printf("\nWrongPassword\n");
+            printf("\n1 Reset password.\n");
+            printf("\n2 Retry login.\n");
+            printf("\n3.Go to back.");
+            printf("\n\n\nEnter 0-3 to operate the system.\n\n");
             printf("\n\nInput: ");
             scanf("%d", &key);
                 if(key==1){
@@ -92,12 +94,14 @@ void adminLogin(){
                 }
                 else if(key==2)
                     goto label;
+                else if(key==3)
+                    adminAccessOption();
                 else
                     goto label;
         }
 }
 
-void adminAccessOption(){
+void adminAccessOption(){ //options for login
     int status;
     labelAccess:
     system("cls");
@@ -131,8 +135,7 @@ void adminAccessOption(){
 
 }
 
-
-void adminPassReset(){
+void adminPassReset(){ //admin pass reset
     char pass[ADMIN_PASS_SIZE], pass2[ADMIN_PASS_SIZE];
     char super[50];
     label:
@@ -195,7 +198,7 @@ void adminPassReset(){
 
 }
 
-void forntInterface(){
+void forntInterface(){ //main panel, starter interface
 
     int loginSelection = 1;
     mainlabel:
@@ -206,7 +209,7 @@ void forntInterface(){
     printf("----------\n");
     printf("\n1.Admin\n");
     printf("\n2.User\n");
-    printf("\n0.EXIT");
+    printf("\n0.Exit");
     printf("\n\n\nEnter 0-2 to operate the sy0stem.\n\n");
     printf("Input: ");
     scanf("%d", &loginSelection);
