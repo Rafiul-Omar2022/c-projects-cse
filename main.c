@@ -6,7 +6,6 @@
 const char SUPERKEY[] = "QJGWaZzePAPFBRo"; //for admin password reset
 
 
-
 typedef struct AccountHolderInformations{
     int account_id;
     char name[aosv_size];
@@ -21,6 +20,8 @@ typedef struct AccountHolderInformations{
 
 }accHolder;
 
+void createResetkey(); //create a backup key
+
 // Interfaces and login operation functions
 void delay();
 void admin();
@@ -33,13 +34,11 @@ void forntInterface();
 
 //File operation functions
 void create();
-//void append();
+void append();
 void display();
-//void search_id();
-//void total_account_number();
-//void update();
-//void sort_by_name();
-//void delete_account();
+void search_id();
+void update();
+void delete_account();
 
 
 
@@ -53,7 +52,7 @@ void user(){
 // Main function
 int main(){
 
-
+    createResetkey();
     forntInterface();
 
 
@@ -66,6 +65,7 @@ int main(){
 void create(){
     FILE *fp;
     int accsize = 0;
+
     printf("\t\t\t\tBank Management System (ADMIN) \n");
     printf("\t\t\t----------------------------------------------\n\n\n");
     printf("\n\nHow many account do you want to create: ");
@@ -73,7 +73,7 @@ void create(){
     accHolder person[accsize];
     fp = fopen("accountrecords.txt", "w");
     for(int i=0; i<accsize; i++){
-        printf("Enter account Id: ");
+        printf("\nEnter account Id: ");
         scanf("%d", &person[i].account_id);
         printf("Enter account holder name: ");
         fflush(stdin);
@@ -96,13 +96,14 @@ void display(){
     accHolder person;
     FILE *fp = fopen("accountrecords.txt", "r");
 
-    printf("\nID\tName\tAge\t\Created Date\tBalance\n");
+    printf("\nID\tName\t\tBalance\t\t Age\t\tCreated");
+    printf("\n--------------------------------------------------------------------------\n");
     while(fread(&person, sizeof(accHolder), 1, fp)){
-        printf("%d\t%s\t%d\t%.4f\t%d %d %d\n",
+        printf("\n%d\t%s\t%15.3f\t\t%d\t%10d/%d/%d\n",
                person.account_id,
                person.name,
-               person.age,
                person.balance,
+               person.age,
                person.doc.day,
                person.doc.month,
                person.doc.year);
@@ -110,6 +111,139 @@ void display(){
 
 }
 
+
+void append(){
+    FILE *fp;
+    int accsize = 0;
+    printf("\t\t\t\tBank Management System (ADMIN) \n");
+    printf("\t\t\t----------------------------------------------\n\n\n");
+    printf("\n\nHow many account do you want to create: ");
+    scanf("%d", &accsize);
+    accHolder person[accsize];
+    fp = fopen("accountrecords.txt", "a");
+    for(int i=0; i<accsize; i++){
+        printf("\nEnter account Id: ");
+        scanf("%d", &person[i].account_id);
+        printf("Enter account holder name: ");
+        fflush(stdin);
+        scanf("%[^\n]s", person[i].name);
+        printf("Enter account register date. Ex,(day month year) with spaces: ");
+        scanf("%d %d %d", &person[i].doc.day, &person[i].doc.month, &person[i].doc.year);
+        printf("Account holder age: ");
+        scanf("%d", &person[i].age);
+        printf("Amount to deposite: ");
+        scanf("%f", &person[i].balance);
+        printf("Create pass for account holder: ");
+        scanf("%s", person[i].password);
+        fwrite(&person[i], sizeof(accHolder), 1, fp);
+    }
+    fclose(fp);
+}
+
+void search_id(){
+    accHolder person;
+    FILE *fp;
+    fp = fopen("accountrecords.txt", "r");
+
+    int id, found = 0;
+    printf("Enter account Id to search: ");
+    scanf("%d", &id);
+    printf("\nID\tName\t\tBalance\t\tAge\t\tCreated");
+    printf("\n--------------------------------------------------------------------------\n");
+    while(fread(&person, sizeof(accHolder), 1, fp)){
+        if(person.account_id == id){
+            found = 1;
+            printf("\n%d\t%s\t%15.3f\t\t%d\t%10d/%d/%d\n",
+               person.account_id,
+               person.name,
+               person.balance,
+               person.age,
+               person.doc.day,
+               person.doc.month,
+               person.doc.year);
+        }
+
+    }
+    if(!found){
+        system("cls");
+        printf("\n Id: %d, Not Found\n", id);
+    }
+
+    fclose(fp);
+}
+
+void delete_account(){
+    accHolder person;
+    FILE *fp, *fp1;
+    fp = fopen("accountrecords.txt", "r");
+    fp1 = fopen("temp.txt", "w");
+    int id, found = 0;
+    printf("Enter Id to delete: ");
+    scanf("%d", &id);
+    while(fread(&person, sizeof(accHolder), 1, fp)){
+        if(person.account_id == id){
+            found = 1;
+        }else
+            fwrite(&person, sizeof(accHolder), 1, fp1);
+    }
+    fclose(fp);
+    fclose(fp1);
+    if(found){
+        fp1 = fopen("temp.txt", "r");
+        fp = fopen("accountrecords.txt", "w");
+
+        while(fread(&person, sizeof(accHolder), 1, fp1)){
+            fwrite(&person, sizeof(accHolder), 1, fp);
+        }
+
+        fclose(fp);
+        fclose(fp1);
+        printf("\nId: %d deleted permanently\n", id);
+    }else{
+        printf("\nRecord not found!\n");
+    }
+}
+
+void update(){
+    accHolder person;
+    FILE *fp, *fp1;
+    fp = fopen("accountrecords.txt", "r");
+    fp1 = fopen("temp.txt", "w");
+    int id, found = 0;
+    printf("Enter Id to update: ");
+    scanf("%d", &id);
+    while(fread(&person, sizeof(accHolder), 1, fp)){
+        if(person.account_id == id){
+            found = 1;
+            fflush(stdin);
+            printf("\nEnter new name: ");
+            scanf("%[^\n]s", person.name);
+            printf("Enter new age: ");
+            scanf("%d", &person.age);
+            printf("Enter account created new date: (day/month/year): ");
+            scanf("%d %d %d", &person.doc.day, &person.doc.month, &person.doc.year);
+            printf("Enter new balance: ");
+            scanf("%f", &person.balance);
+        }
+
+        fwrite(&person, sizeof(accHolder), 1, fp1);
+    }
+    fclose(fp);
+    fclose(fp1);
+    if(found){
+        fp1 = fopen("temp.txt", "r");
+        fp = fopen("accountrecords.txt", "w");
+
+        while(fread(&person, sizeof(accHolder), 1, fp1)){
+            fwrite(&person, sizeof(accHolder), 1, fp);
+        }
+
+        fclose(fp);
+        fclose(fp1);
+    }else{
+        printf("\nRecord not found!\n");
+    }
+}
 
 
 void delay(){
@@ -139,11 +273,11 @@ void admin(){ //admin string operations
         printf("\n2.ADD ACCOUNT(append account) ");
         printf("\n3.DISPLAY ACCOUNT LIST");
         printf("\n4.SEARCH ACCOUNT ID");
-        printf("\n5.DISPLAY TOTAL ACCOUNT NUMBER");
-        printf("\n6.UPDATE ACCOUNT");
-        printf("\n7.SORT ACCOUNT BY NAME");
-        printf("\n8.DELETE ACCOUNT");
+        printf("\n5.UPDATE ACCOUNT");
+        printf("\n6.DELETE ACCOUNT");
+        printf("\n7.Back");
         printf("\n0.EXIT");
+        printf("\n\n\nEnter 0-2 to operate the sy0stem.\n\n");
         printf("\n\nInput: ");
         scanf("%d", &ch);
 
@@ -154,7 +288,7 @@ void admin(){ //admin string operations
             break;
         case 2:
             system("cls");
-            //append();
+            append();
             break;
         case 3:
             system("cls");
@@ -162,26 +296,23 @@ void admin(){ //admin string operations
             break;
         case 4:
             system("cls");
-            //search_id();
+            search_id();
             break;
         case 5:
             system("cls");
-            //total_account_number();
+            update();
             break;
         case 6:
-            //update();
+            system("cls");
+            delete_account();
             break;
         case 7:
-            //sort_by_name();
-            break;
-        case 8:
-            //delete_account();
+            system("cls");
+            adminAccessOption();
             break;
         }
 
     }while(ch!=0);
-
-
 
 }
 
@@ -210,7 +341,6 @@ int passwordLoginAccess(char str[]){ //password matching code only for admin log
 }
 
 void adminLogin(){ //check admin password
-
 
         int access;
         char password[ADMIN_PASS_SIZE];
@@ -395,6 +525,14 @@ void forntInterface(){ //main panel, starter interface
     }
 }
 
+
+
+
+void createResetkey(){ //create a backup key
+    FILE * fp = fopen("resetkey.txt", "w");
+    fprintf(fp,"%s", SUPERKEY);
+    fclose(fp);
+}
 
 
 
