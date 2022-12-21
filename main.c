@@ -2,9 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 #define aosv_size 50 //array of structure variable size
-#define ADMIN_PASS_SIZE 50
+#define ADMIN_PASS_SIZE 50 //array password limitation
 const char SUPERKEY[] = "QJGWaZzePAPFBRo"; //for admin password reset
-
 
 typedef struct AccountHolderInformations{
     int account_id;
@@ -20,19 +19,23 @@ typedef struct AccountHolderInformations{
 
 }accHolder;
 
-void createResetkey(); //create a backup key
+//Utilites
+int passwordLoginAccess(char str[]); //pass cheacker/verify
+void createResetkey(); //create a backup key for admin
+void delay();// create time delay
 
-// Interfaces and login operation functions
-void delay();
+// Interfaces and login operation
+void forntInterface();
+
+//Admin function and login
 void admin();
-int passwordLoginAccess(char str[]);
 void adminLogin();
 void adminAccessOption();
 void adminPassReset();
-void forntInterface();
+void adminUserpassReset();
 
 
-//File operation functions
+//File operation functions admin
 void create();
 void append();
 void display();
@@ -41,11 +44,15 @@ void update();
 void delete_account();
 
 
+//user
+void userAcces(); // check password and user id match
+void user(int ID); // main operation for user
+//void userDeposite();
+//void userWithdraw();
+//void userSelfUpdateInfo(int ID);
 
 
-void user(){
-    printf("User login");
-}
+
 
 
 
@@ -488,6 +495,134 @@ void adminPassReset(){ //admin pass reset
 
 }
 
+void user(int ID){
+        system("cls");
+        printf("\t\t\t\tBank Management System (USER) \n");
+        printf("\t\t\t-------------------------------------------------\n\n\n");
+        printf("Login........");
+        delay(); // delay for 3 second
+        printf("User Login....");
+
+        system("cls");
+        printf("User Login Success");
+
+        system("cls");
+        printf("\t\t\t\tBank Management System (USER) \n");
+        printf("\t\t\t--------------------------------------------\n\n\n");
+        int ch;
+    do{
+        printf("\n");
+        printf("\n1.DIPOSITE AMMOUNT.");
+        printf("\n2.WIDTHDRAW AMMOUNT.");
+        printf("\n3.UPDATE INFORMATION.");
+        printf("\n4.BACK.");
+        printf("\n0.EXIT.");
+        printf("\n\n\nEnter 0-4 to operate the system.\n\n");
+        printf("\n\nInput: ");
+        scanf("%d", &ch);
+
+        switch(ch){
+        case 1:
+            system("cls");
+            //diposite
+            break;
+        case 2:
+            system("cls");
+            //withdraw
+            break;
+        case 3:
+            system("cls");
+            //userSelfUpdateInfo(ID);
+            break;
+        case 4:
+            system("cls");
+            forntInterface();
+            break;
+        }
+
+    }while(ch!=0);
+}
+
+int passwordLoginAccessUser(char str[]){ //password matching code only for admin login, password is stored in file.
+
+    accHolder person;
+    FILE *passfile;
+    passfile = fopen("accountrecords.txt", "r");
+    if(passfile==NULL){
+          printf("Error, pass not found.");
+          fclose(passfile);
+          delay();
+          forntInterface();// if adminpass.txt file missing then create a file with ,"admin123" password.
+    }
+    int passSame=0;
+    while(fread(&person, sizeof(accHolder), 1, passfile)){
+        if(!strcmp(str, person.password)){
+            passSame = 1;
+        }
+    }
+
+    fclose(passfile);
+    if(passSame){
+        return 1;
+    }else
+        return 0;
+}
+
+void userAcces(){
+
+    accHolder person;
+    FILE *fp;
+    fp = fopen("accountrecords.txt", "r");
+
+    int userid, found = 0;
+    char userpass[ADMIN_PASS_SIZE];
+    if(fp!=NULL){
+
+        printf("User ID: ");
+        scanf("%d", &userid);
+
+        while(fread(&person, sizeof(accHolder), 1, fp)){
+            if(person.account_id == userid){
+                found = 1;
+            }
+        }
+
+        if(found){
+            printf("\nEnter passWord: ");
+            fflush(stdin);
+            scanf("%[^\n]s", &userpass);
+            int access = passwordLoginAccessUser(userpass);
+            if(access){
+                fclose(fp);
+                user(userid); // go to user operations
+            }else{
+                fclose(fp);
+                printf("\n\nPassword not matched");
+                delay();
+                forntInterface();
+            }
+
+        }
+        else{
+            fclose(fp);
+            printf("\n\nID not found");
+            delay();
+            forntInterface();
+        }
+
+    }
+    else{
+        printf("\nNo account found.Create account with bank admin.");
+        fclose(fp);
+        delay();
+        forntInterface();
+    }
+
+}
+
+
+
+
 void forntInterface(){ //main panel, starter interface
 
     int loginSelection = 1;
@@ -500,11 +635,9 @@ void forntInterface(){ //main panel, starter interface
     printf("\n1.Admin\n");
     printf("\n2.User\n");
     printf("\n0.Exit");
-    printf("\n\n\nEnter 0-2 to operate the sy0stem.\n\n");
+    printf("\n\n\nEnter 0-2 to operate the system.\n\n");
     printf("Input: ");
     scanf("%d", &loginSelection);
-
-
 
     if(loginSelection>=0 && loginSelection <=9){
         switch(loginSelection){
@@ -514,7 +647,7 @@ void forntInterface(){ //main panel, starter interface
             break;
         case 2:
             system("cls");
-            user();
+            userAcces();
             break;
         case 0:
             exit(1);
@@ -523,8 +656,12 @@ void forntInterface(){ //main panel, starter interface
             goto mainlabel;
         }
     }
+    else{
+        printf("\n\nWrong Input");
+        delay();
+        goto mainlabel;
+    }
 }
-
 
 
 
@@ -533,11 +670,3 @@ void createResetkey(){ //create a backup key
     fprintf(fp,"%s", SUPERKEY);
     fclose(fp);
 }
-
-
-
-
-
-
-
-
