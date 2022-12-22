@@ -46,7 +46,8 @@ void delete_account();
 
 //user
 void userAcces(); // check password and user id match
-void user(int ID); // main operation for user
+void user(char name[] ,int ID); // main operation for user
+int passwordLoginAccessUser(char str[], int ID);
 //void userDeposite();
 //void userWithdraw();
 //void userShowInfo(int ID);
@@ -282,8 +283,8 @@ void admin(){ //admin string operations
         printf("\n4.SEARCH ACCOUNT ID");
         printf("\n5.UPDATE ACCOUNT");
         printf("\n6.DELETE ACCOUNT");
-        printf("\n7.Back");
-        printf("\n8.PASSWORD RESET OF ACCOUNT.");
+        printf("\n7.PASSWORD RESET OF ACCOUNT.");
+        printf("\n8.Back");
         printf("\n0.EXIT");
         printf("\n\n\nEnter 0-2 to operate the sy0stem.\n\n");
         printf("\n\nInput: ");
@@ -316,13 +317,12 @@ void admin(){ //admin string operations
             break;
         case 7:
             system("cls");
-            adminAccessOption();
-            break;
-
-        case 8:
-            system("cls");
             adminUserpassReset();
             break;
+        case 8:
+            system("cls");
+            adminAccessOption();
+             break;
         }
     }while(ch!=0);
 
@@ -491,7 +491,7 @@ void adminPassReset(){ //admin pass reset
         }
     }else{
         system("cls");
-        printf("\n\nSuper key didnt match (super key is in top of the program define section)...");
+        printf("\n\nReset key didnt match (reset key is in top of the program define section)...");
         delay(); // 3 sec delay
         goto label;
     }
@@ -506,14 +506,16 @@ void adminUserpassReset(){
     fp = fopen("accountrecords.txt", "r");
     fp1 = fopen("temp.txt", "w");
     int id, found = 0;
+    char userName[aosv_size];
     printf("Enter Id to update password: ");
     scanf("%d", &id);
     while(fread(&person, sizeof(accHolder), 1, fp)){
         if(person.account_id == id){
             found = 1;
             fflush(stdin);
-            printf("\nEnter new password of Id: %d ", id);
+            printf("\nEnter new password of Id: %d, name: %s : ", id, person.name);
             scanf("%[^\n]s", person.password);
+            strcpy(userName, person.name);
         }
 
         fwrite(&person, sizeof(accHolder), 1, fp1);
@@ -527,7 +529,7 @@ void adminUserpassReset(){
         while(fread(&person, sizeof(accHolder), 1, fp1)){
             fwrite(&person, sizeof(accHolder), 1, fp);
         }
-
+        printf("\nPassword reset successful for id: %d, name: %s", id, userName);
         fclose(fp);
         fclose(fp1);
     }else{
@@ -537,20 +539,18 @@ void adminUserpassReset(){
 }
 
 
-void user(int ID){
+void user(char name[], int ID){
         system("cls");
-        printf("\t\t\t\tBank Management System (USER) \n");
-        printf("\t\t\t-------------------------------------------------\n\n\n");
         printf("Login........");
         delay(); // delay for 3 second
         printf("User Login....");
 
         system("cls");
         printf("User Login Success");
-
+        delay();
         system("cls");
-        printf("\t\t\t\tBank Management System (USER) \n");
-        printf("\t\t\t--------------------------------------------\n\n\n");
+        printf("\t\t\t\tBank Management System ( %s, %d ) \n", name, ID );
+        printf("\t\t\t-------------------------------------------------\n\n\n");
         int ch;
     do{
         printf("\n");
@@ -587,8 +587,7 @@ void user(int ID){
     }while(1);
 }
 
-int passwordLoginAccessUser(char str[]){ //password matching code only for admin login, password is stored in file.
-
+int passwordLoginAccessUser(char pass[], int ID){ //password matching code only for admin login, password is stored in file.
     accHolder person;
     FILE *passfile;
     passfile = fopen("accountrecords.txt", "r");
@@ -600,8 +599,10 @@ int passwordLoginAccessUser(char str[]){ //password matching code only for admin
     }
     int passSame=0;
     while(fread(&person, sizeof(accHolder), 1, passfile)){
-        if(!strcmp(str, person.password)){
+        if(person.account_id == ID){
+            if(!strcmp(pass, person.password) ){
             passSame = 1;
+            }
         }
     }
 
@@ -620,6 +621,7 @@ void userAcces(){
 
     int userid, found = 0;
     char userpass[ADMIN_PASS_SIZE];
+    char userName[aosv_size];
     if(fp!=NULL){
 
         printf("User ID: ");
@@ -628,19 +630,19 @@ void userAcces(){
         while(fread(&person, sizeof(accHolder), 1, fp)){
             if(person.account_id == userid){
                 found = 1;
+                strcpy(userName, person.name);
             }
         }
+        fclose(fp);
 
         if(found){
             printf("\nEnter passWord: ");
             fflush(stdin);
             scanf("%[^\n]s", &userpass);
-            int access = passwordLoginAccessUser(userpass);
+            int access = passwordLoginAccessUser(userpass, userid);
             if(access){
-                fclose(fp);
-                user(userid); // go to user operations
+                user(userName, userid); // go to user operations
             }else{
-                fclose(fp);
                 printf("\n\nPassword not matched");
                 delay();
                 forntInterface();
@@ -648,7 +650,6 @@ void userAcces(){
 
         }
         else{
-            fclose(fp);
             printf("\n\nID not found");
             delay();
             forntInterface();
@@ -656,8 +657,8 @@ void userAcces(){
 
     }
     else{
-        printf("\nNo account found.Create account with bank admin.");
         fclose(fp);
+        printf("\nNo account found.Create account with bank admin.");
         delay();
         forntInterface();
     }
