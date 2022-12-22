@@ -49,7 +49,7 @@ void userAcces(); // check password and user id match
 void user(int ID); // main operation for user
 //void userDeposite();
 //void userWithdraw();
-//void userSelfUpdateInfo(int ID);
+//void userShowInfo(int ID);
 
 
 
@@ -283,6 +283,7 @@ void admin(){ //admin string operations
         printf("\n5.UPDATE ACCOUNT");
         printf("\n6.DELETE ACCOUNT");
         printf("\n7.Back");
+        printf("\n8.PASSWORD RESET OF ACCOUNT.");
         printf("\n0.EXIT");
         printf("\n\n\nEnter 0-2 to operate the sy0stem.\n\n");
         printf("\n\nInput: ");
@@ -317,8 +318,12 @@ void admin(){ //admin string operations
             system("cls");
             adminAccessOption();
             break;
-        }
 
+        case 8:
+            system("cls");
+            adminUserpassReset();
+            break;
+        }
     }while(ch!=0);
 
 }
@@ -431,7 +436,6 @@ void adminAccessOption(){ //options for login
         goto labelAccess;
     }
 
-
 }
 
 void adminPassReset(){ //admin pass reset
@@ -442,7 +446,7 @@ void adminPassReset(){ //admin pass reset
     printf("\t\t\t\tBank Management System (password reset)\n");
     printf("\t\t\t-------------------------------------------------\n\n\n");
 
-    printf("\nEnter Super key: "); // super key: QJGWaZzePAPFBRo
+    printf("\nEnter Super key( created file in your program diractory): "); // super key: QJGWaZzePAPFBRo
     fflush(stdin);
     scanf("%[^\n]s", super);
 
@@ -495,6 +499,44 @@ void adminPassReset(){ //admin pass reset
 
 }
 
+void adminUserpassReset(){
+
+    accHolder person;
+    FILE *fp, *fp1;
+    fp = fopen("accountrecords.txt", "r");
+    fp1 = fopen("temp.txt", "w");
+    int id, found = 0;
+    printf("Enter Id to update password: ");
+    scanf("%d", &id);
+    while(fread(&person, sizeof(accHolder), 1, fp)){
+        if(person.account_id == id){
+            found = 1;
+            fflush(stdin);
+            printf("\nEnter new password of Id: %d ", id);
+            scanf("%[^\n]s", person.password);
+        }
+
+        fwrite(&person, sizeof(accHolder), 1, fp1);
+    }
+    fclose(fp);
+    fclose(fp1);
+    if(found){
+        fp1 = fopen("temp.txt", "r");
+        fp = fopen("accountrecords.txt", "w");
+
+        while(fread(&person, sizeof(accHolder), 1, fp1)){
+            fwrite(&person, sizeof(accHolder), 1, fp);
+        }
+
+        fclose(fp);
+        fclose(fp1);
+    }else{
+        printf("\nRecord not found!\n");
+    }
+
+}
+
+
 void user(int ID){
         system("cls");
         printf("\t\t\t\tBank Management System (USER) \n");
@@ -514,7 +556,7 @@ void user(int ID){
         printf("\n");
         printf("\n1.DIPOSITE AMMOUNT.");
         printf("\n2.WIDTHDRAW AMMOUNT.");
-        printf("\n3.UPDATE INFORMATION.");
+        printf("\n3.SHOW INFORMATION.");
         printf("\n4.BACK.");
         printf("\n0.EXIT.");
         printf("\n\n\nEnter 0-4 to operate the system.\n\n");
@@ -538,9 +580,11 @@ void user(int ID){
             system("cls");
             forntInterface();
             break;
+        case 0:
+            return 0;
         }
 
-    }while(ch!=0);
+    }while(1);
 }
 
 int passwordLoginAccessUser(char str[]){ //password matching code only for admin login, password is stored in file.
@@ -662,6 +706,7 @@ void forntInterface(){ //main panel, starter interface
         goto mainlabel;
     }
 }
+
 
 
 
