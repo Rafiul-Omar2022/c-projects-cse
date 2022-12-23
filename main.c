@@ -1,9 +1,18 @@
+/* Project Title: Commercial Bank Management System.
+*  Section: CSE115L.5
+*  Project group: 09
+*  Group-mate's:
+*       Rafiul Omar Rafi
+*       Mahim Islam
+*       Sayed Ashraful Islam Opin
+*/
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #define aosv_size 50 //array of structure variable size
 #define ADMIN_PASS_SIZE 50 //array password limitation
-const char SUPERKEY[] = "QJGWaZzePAPFBRo"; //for admin password reset
+const char SUPERKEY[] = "QJGWaZzePAPFBRo"; //for administration password reset
 
 typedef struct AccountHolderInformations{
     int account_id;
@@ -19,56 +28,54 @@ typedef struct AccountHolderInformations{
 
 }accHolder;
 
-//Utilites
-int passwordLoginAccess(char str[]); //pass cheacker/verify
-void createResetkey(); //create a backup key for admin
+//Utility
+int passwordLoginAccess(char str[]); //pass checker/verify
+void createResetkey(); //create a backup key for administration
 void delay();// create time delay
 
 // Interfaces and login operation
 void forntInterface();
 
-//Admin function and login
-void admin();
-void adminLogin();
-void adminAccessOption();
-void adminPassReset();
-void adminUserpassReset();
-void bankStatement();
+//administration function and login
+void admin(); // main operation for administration
+void adminLogin(); // request access for administration login, reset pass interface
+void adminAccessOption(); // administration login, reset pass interface
+void adminPassReset(); // administration password reset function
+void adminUserpassReset(); // administration can reset users password
+void bankStatement(); // show overall deposits (show total balance)
 
 
+//File operation functions for administration
+void create(); //create accounts
+void append(); //append accounts
+void display(); // display account of all users
+void search_id(); // search by id of a user
+void update(); // update information of a user
+void delete_account(); // delete account of a user
 
-//File operation functions admin
-void create();
-void append();
-void display();
-void search_id();
-void update();
-void delete_account();
 
-
-//user
+//File Operation functions for users
 void userAcces(); // check password and user id match
 void user(char name[] ,int ID); // main operation for user
-int passwordLoginAccessUser(char str[], int ID);
-void userDeposite(int ID);
-void userWithdraw(int ID);
-void userShowInfo(int ID);
+int passwordLoginAccessUser(char str[], int ID); // return 1, if user id is matched with its password
+void userDeposite(int ID); // user can deposit
+void userWithdraw(int ID); // user can withdraw
+void userShowInfo(int ID); // user can show their account details
+void userFundTransfer(int ID); //one User can transfer fund to another users
 
 
 
 
 
 
-// Main function
+// Main Function Start------------------------------------------------------
 int main(){
 
     createResetkey();
     forntInterface();
-
-
     return 0;
 }
-
+//-------------------------------------------------------Main Function End---
 
 
 
@@ -76,7 +83,7 @@ void create(){
     FILE *fp;
     int accsize = 0;
 
-    printf("\t\t\t\tBank Management System (ADMIN) \n");
+    printf("\t\t\t\tCommercial Bank Management System (ADMIN) \n");
     printf("\t\t\t----------------------------------------------\n\n\n");
     printf("\n\nHow many account do you want to create: ");
     scanf("%d", &accsize);
@@ -126,7 +133,7 @@ void display(){
 void append(){
     FILE *fp;
     int accsize = 0;
-    printf("\t\t\t\tBank Management System (ADMIN) \n");
+    printf("\t\t\t\tCommercial Bank Management System (ADMIN) \n");
     printf("\t\t\t----------------------------------------------\n\n\n");
     printf("\n\nHow many account do you want to create: ");
     scanf("%d", &accsize);
@@ -263,13 +270,12 @@ void bankStatement(){
     float totalBankAmmount = 0;
     printf("\t\t\t\tBank Management System (ADMIN) \n");
     printf("\t\t\t----------------------------------------------\n\n\n");
-    printf("");
     while(fread(&person, sizeof(accHolder), 1, fp)){
         totalBankAmmount += person.balance;
         printf("\nID:%d, Name: %s, Balance: %f", person.account_id, person.name, person.balance);
     }
     fclose(fp);
-    printf("\n\nTotal bank reserve: %lf TK.", totalBankAmmount);
+    printf("\n\nTotal bank reserve: %f TK.", totalBankAmmount);
 }
 
 
@@ -291,7 +297,7 @@ void admin(){ //admin string operations
         printf("Admin Login Success");
 
         system("cls");
-        printf("\t\t\t\tBank Management System (ADMIN) \n");
+        printf("\t\t\t\tCommercial Bank Management System (ADMIN) \n");
         printf("\t\t\t--------------------------------------------\n\n\n");
         int ch;
     do{
@@ -383,7 +389,7 @@ void adminLogin(){ //check admin password
         char password[ADMIN_PASS_SIZE];
         label:
         system("cls");
-        printf("\t\t\t\tBank Management System (Admin panel)\n");
+        printf("\t\t\t\tCommercial Bank Management System (Admin panel)\n");
         printf("\t\t\t-------------------------------------------------\n\n\n");
         FILE *fp;
         fp = fopen("adminpass.txt", "r");
@@ -409,7 +415,7 @@ void adminLogin(){ //check admin password
         }else{
             system("cls");
             int key;
-            printf("\t\t\t\tBank Management System (Admin panel)\n");
+            printf("\t\t\t\tCommercial Bank Management System (Admin panel)\n");
             printf("\t\t\t-------------------------------------------------\n\n\n\n");
             printf("\nWrongPassword\n");
             printf("\n1 Reset password.\n");
@@ -468,7 +474,7 @@ void adminPassReset(){ //admin pass reset
     char super[50];
     label:
     system("cls");
-    printf("\t\t\t\tBank Management System (password reset)\n");
+    printf("\t\t\t\tCommercial Bank Management System (password reset)\n");
     printf("\t\t\t-------------------------------------------------\n\n\n");
 
     printf("\nEnter password reset key( created file in your program diractory): "); // super key: QJGWaZzePAPFBRo
@@ -478,7 +484,7 @@ void adminPassReset(){ //admin pass reset
     if(!strcmp(super, SUPERKEY)){
         passInput:
         system("cls");
-        printf("\t\t\t\tBank Management System (password reset)\n");
+        printf("\t\t\t\tCommercial Bank Management System (password reset)\n");
         printf("\t\t\t-------------------------------------------------\n\n\n");
         printf("Checking reset key.....");
         delay();
@@ -486,7 +492,7 @@ void adminPassReset(){ //admin pass reset
         printf("Reset key accepted..");
         delay();
         system("cls");
-        printf("\t\t\t\tBank Management System (password reset)\n");
+        printf("\t\t\t\tCommercial Bank Management System (password reset)\n");
         printf("\t\t\t-------------------------------------------------\n\n\n");
         printf("\n\n\nEnter new password: ");
         fflush(stdin);
@@ -500,7 +506,7 @@ void adminPassReset(){ //admin pass reset
             fprintf(fp, "%s", pass);
             fclose(fp);
             system("cls");
-            printf("\t\t\t\tBank Management System (password reset)\n");
+            printf("\t\t\t\tCommercial Bank Management System (password reset)\n");
             printf("\t\t\t-------------------------------------------------\n\n\n");
             printf("\nPassword is successfully reset!.");
             delay(); //3 sec delay
@@ -508,7 +514,7 @@ void adminPassReset(){ //admin pass reset
         }
         else{
             system("cls");
-            printf("\t\t\t\tBank Management System (password reset)\n");
+            printf("\t\t\t\tCommercial Bank Management System (password reset)\n");
             printf("\t\t\t-------------------------------------------------\n\n\n");
             printf("Password didn't match. try again");
             delay();
@@ -574,7 +580,7 @@ void user(char name[], int ID){
         printf("User Login Success");
         delay();
         system("cls");
-        printf("\t\t\t\tBank Management System ( %s, %d ) \n", name, ID );
+        printf("\t\t\t\tCommercial Bank Management System ( %s, %d ) \n", name, ID );
         printf("\t\t\t-------------------------------------------------\n\n\n");
         int ch;
     do{
@@ -582,9 +588,10 @@ void user(char name[], int ID){
         printf("\n1.DIPOSITE AMMOUNT.");
         printf("\n2.WIDTHDRAW AMMOUNT.");
         printf("\n3.SHOW INFORMATION.");
-        printf("\n4.BACK.");
+        printf("\n4.TRANSFER FUND");
+        printf("\n5.BACK.");
         printf("\n0.EXIT.");
-        printf("\n\n\nEnter 0-4 to operate the system.\n\n");
+        printf("\n\n\nEnter 0-5 to operate the system.\n\n");
         printf("\n\nInput: ");
         scanf("%d", &ch);
 
@@ -602,6 +609,10 @@ void user(char name[], int ID){
             userShowInfo(ID);
             break;
         case 4:
+            system("cls");
+            userFundTransfer(ID);
+            break;
+        case 5:
             system("cls");
             forntInterface();
             break;
@@ -711,7 +722,7 @@ void userShowInfo(int ID){
 }
 
 void userDeposite(int ID){
-  accHolder person;
+    accHolder person;
     FILE *fp, *fp1;
     fp = fopen("accountrecords.txt", "r");
     fp1 = fopen("temp.txt", "w");
@@ -753,6 +764,7 @@ void userWithdraw(int ID){
     fp1 = fopen("temp.txt", "w");
     int found = 0;
     float ammount = 0;
+    int message = 0;
     while(fread(&person, sizeof(accHolder), 1, fp)){
         if(person.account_id == ID){
             found = 1;
@@ -761,6 +773,7 @@ void userWithdraw(int ID){
             scanf("%f", &ammount);
             if(person.balance >= ammount){
                 person.balance -= ammount;
+                message = 1;
             }else{
                 printf("\nIn insufficient ammount.");
                 delay();
@@ -774,31 +787,103 @@ void userWithdraw(int ID){
     if(found){
         fp1 = fopen("temp.txt", "r");
         fp = fopen("accountrecords.txt", "w");
-
+        if(message){
+            printf("%f ammount successfully withdraw.", ammount);
+        }
         while(fread(&person, sizeof(accHolder), 1, fp1)){
             fwrite(&person, sizeof(accHolder), 1, fp);
         }
-        printf("%f ammount successfully withdraw.", ammount);
         fclose(fp);
         fclose(fp1);
         delay();
     }else{
         printf("\nRecord not found!\n");
     }
+
+
 }
 
-//--------------------------------------------------------------------------
+void userFundTransfer(int senderID){
 
-//
+    accHolder person;
+    int receiverID;
+    float sendAmmount = 0;
+
+    printf("\nEnter ammount to send: ");
+    scanf("%f", &sendAmmount);
+
+    printf("\nEnter receiver ID : ");
+    scanf("%d", &receiverID);
 
 
+    FILE *fp = fopen("accountrecords.txt","r");
+    FILE *fp1 = fopen("temp.txt", "w");
+    int vaildReceiver = 0;
+    while(fread(&person, sizeof(accHolder),1, fp)){
+         if(person.account_id == receiverID){
+            vaildReceiver = 1;
+         }
+    }
+    fclose(fp);
+    fp = fopen("accountrecords.txt","r");
+    int vaildAmmount = 0;
+    while(fread(&person, sizeof(accHolder),1, fp)){
+         if(person.account_id == senderID){
+            if(person.balance >= sendAmmount){
+                vaildAmmount = 1;
+            }
+         }
+    }
+    fclose(fp);
+    fp = fopen("accountrecords.txt","r");
+    if(vaildAmmount && vaildReceiver){
+        while(fread(&person, sizeof(accHolder), 1, fp)){
+            if(person.account_id==senderID){
+                person.balance -= sendAmmount;
+            }
+            if(person.account_id==receiverID){
+                person.balance += sendAmmount;
+            }
+
+            fwrite(&person, sizeof(accHolder), 1, fp1);
+        }
+        fclose(fp);
+        fclose(fp1);
+
+        fp1 = fopen("temp.txt", "r");
+        fp = fopen("accountrecords.txt", "w");
+        while(fread(&person, sizeof(accHolder), 1, fp1)){
+            fwrite(&person, sizeof(accHolder), 1, fp);
+        }
+        printf("%f ammount successfully transfered to %d. ", sendAmmount, receiverID);
+        fclose(fp);
+        fclose(fp1);
+        delay();
+    }
+    else if( (vaildAmmount==1) && (vaildReceiver==0)){
+        printf("\nReceiver id not found");
+        delay();
+    }
+    else if((vaildAmmount==0) && (vaildReceiver==1)){
+        printf("\nYour balance is insufficient to send.");
+        delay();
+    }
+    else {
+        printf("\nReceiver id invalid and Your balance is insufficient to send.");
+        delay();
+    }
+
+    fclose(fp);
+    fclose(fp1);
+
+}
 
 void forntInterface(){ //main panel, starter interface
 
     int loginSelection = 1;
     mainlabel:
     system("cls");
-    printf("\t\t\t\tBank Management System\n");
+    printf("\t\t\t\tCommercial Bank Management System\n");
     printf("\t\t\t-----------------------------------\n\n\n");
     printf("\n\n\nLogin As: \n");
     printf("----------\n");
@@ -832,9 +917,6 @@ void forntInterface(){ //main panel, starter interface
         goto mainlabel;
     }
 }
-
-
-
 
 void createResetkey(){ //create a backup key
     FILE * fp = fopen("resetkey.txt", "w");
