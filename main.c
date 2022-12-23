@@ -84,7 +84,7 @@ void create(){
     int accsize = 0;
 
     printf("\t\t\t\tCommercial Bank Management System (ADMIN) \n");
-    printf("\t\t\t----------------------------------------------\n\n\n");
+    printf("\t\t\t-------------------------------------------------------------------------\n\n\n");
     printf("\n\nHow many account do you want to create: ");
     scanf("%d", &accsize);
     accHolder person[accsize];
@@ -134,7 +134,7 @@ void append(){
     FILE *fp;
     int accsize = 0;
     printf("\t\t\t\tCommercial Bank Management System (ADMIN) \n");
-    printf("\t\t\t----------------------------------------------\n\n\n");
+    printf("\t\t\t----------------------------------------------------------------------\n\n\n");
     printf("\n\nHow many account do you want to create: ");
     scanf("%d", &accsize);
     accHolder person[accsize];
@@ -167,7 +167,7 @@ void search_id(){
     printf("Enter account Id to search: ");
     scanf("%d", &id);
     printf("\nID\tName\t\tBalance\t\tAge\t\tCreated");
-    printf("\n--------------------------------------------------------------------------\n");
+    printf("\n--------------------------------------------------------------------------------\n");
     while(fread(&person, sizeof(accHolder), 1, fp)){
         if(person.account_id == id){
             found = 1;
@@ -288,7 +288,7 @@ void delay(){
 void admin(){ //admin string operations
         system("cls");
         printf("\t\t\t\tBank Management System (ADMIN) \n");
-        printf("\t\t\t-------------------------------------------------\n\n\n");
+        printf("\t\t\t-------------------------------------------------------------------\n\n\n");
         printf("Login........");
         delay(); // delay for 3 second
         printf("Admin Login....");
@@ -298,7 +298,7 @@ void admin(){ //admin string operations
 
         system("cls");
         printf("\t\t\t\tCommercial Bank Management System (ADMIN) \n");
-        printf("\t\t\t--------------------------------------------\n\n\n");
+        printf("\t\t\t------------------------------------------------------------------\n\n\n");
         int ch;
     do{
         printf("\n");
@@ -390,7 +390,7 @@ void adminLogin(){ //check admin password
         label:
         system("cls");
         printf("\t\t\t\tCommercial Bank Management System (Admin panel)\n");
-        printf("\t\t\t-------------------------------------------------\n\n\n");
+        printf("\t\t\t--------------------------------------------------------------------------\n\n\n");
         FILE *fp;
         fp = fopen("adminpass.txt", "r");
         if(fp==NULL){
@@ -416,7 +416,7 @@ void adminLogin(){ //check admin password
             system("cls");
             int key;
             printf("\t\t\t\tCommercial Bank Management System (Admin panel)\n");
-            printf("\t\t\t-------------------------------------------------\n\n\n\n");
+            printf("\t\t\t------------------------------------------------------------------------\n\n\n\n");
             printf("\nWrongPassword\n");
             printf("\n1 Reset password.\n");
             printf("\n2 Retry login.\n");
@@ -440,8 +440,8 @@ void adminAccessOption(){ //options for login
     int status;
     labelAccess:
     system("cls");
-    printf("\t\t\t\tBank Management System\n");
-    printf("\t\t\t-----------------------------------\n\n\n");
+    printf("\t\t\t\tCommercial Bank Management System\n");
+    printf("\t\t\t----------------------------------------------------------------\n\n\n");
     printf("\n\n1.Enter admin Panel.");
     printf("\n\n2.Reset PassWord.");
     printf("\n\n3.Go to back.");
@@ -475,7 +475,7 @@ void adminPassReset(){ //admin pass reset
     label:
     system("cls");
     printf("\t\t\t\tCommercial Bank Management System (password reset)\n");
-    printf("\t\t\t-------------------------------------------------\n\n\n");
+    printf("\t\t\t-------------------------------------------------------------------------------\n\n\n");
 
     printf("\nEnter password reset key( created file in your program diractory): "); // super key: QJGWaZzePAPFBRo
     fflush(stdin);
@@ -485,7 +485,7 @@ void adminPassReset(){ //admin pass reset
         passInput:
         system("cls");
         printf("\t\t\t\tCommercial Bank Management System (password reset)\n");
-        printf("\t\t\t-------------------------------------------------\n\n\n");
+        printf("\t\t\t------------------------------------------------------------------------------\n\n\n");
         printf("Checking reset key.....");
         delay();
         system("cls");
@@ -493,7 +493,7 @@ void adminPassReset(){ //admin pass reset
         delay();
         system("cls");
         printf("\t\t\t\tCommercial Bank Management System (password reset)\n");
-        printf("\t\t\t-------------------------------------------------\n\n\n");
+        printf("\t\t\t---------------------------------------------------------------------------------\n\n\n");
         printf("\n\n\nEnter new password: ");
         fflush(stdin);
         scanf("%[^\n]s", pass);
@@ -507,7 +507,7 @@ void adminPassReset(){ //admin pass reset
             fclose(fp);
             system("cls");
             printf("\t\t\t\tCommercial Bank Management System (password reset)\n");
-            printf("\t\t\t-------------------------------------------------\n\n\n");
+            printf("\t\t\t---------------------------------------------------------------------------\n\n\n");
             printf("\nPassword is successfully reset!.");
             delay(); //3 sec delay
             adminAccessOption();
@@ -515,7 +515,7 @@ void adminPassReset(){ //admin pass reset
         else{
             system("cls");
             printf("\t\t\t\tCommercial Bank Management System (password reset)\n");
-            printf("\t\t\t-------------------------------------------------\n\n\n");
+            printf("\t\t\t-----------------------------------------------------------------------------\n\n\n");
             printf("Password didn't match. try again");
             delay();
             goto passInput;
@@ -581,7 +581,7 @@ void user(char name[], int ID){
         delay();
         system("cls");
         printf("\t\t\t\tCommercial Bank Management System ( %s, %d ) \n", name, ID );
-        printf("\t\t\t-------------------------------------------------\n\n\n");
+        printf("\t\t\t-----------------------------------------------------------------------\n\n\n");
         int ch;
     do{
         printf("\n");
@@ -884,7 +884,7 @@ void forntInterface(){ //main panel, starter interface
     mainlabel:
     system("cls");
     printf("\t\t\t\tCommercial Bank Management System\n");
-    printf("\t\t\t-----------------------------------\n\n\n");
+    printf("\t\t\t------------------------------------------------\n\n\n");
     printf("\n\n\nLogin As: \n");
     printf("----------\n");
     printf("\n1.Admin\n");
